@@ -1,0 +1,6 @@
+convert(int,字段) --转换为int格式
+cast(字段 as varchar)  --转换为字符串
+convert(varchar(50),字段)  --转换为字符串
+
+LPAD(str,len,padstr)--LPAD(要查询的字段，长度，用来填充的字段)   左填充(oracle)
+RPAD(str,len,padstr)--LPAD(要查询的字段，长度，用来填充的字段)   右填充(oracle)
