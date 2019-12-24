@@ -1,0 +1,1 @@
+datepart(yy,datetime) --提取yy-年份；mm-月份；dd-日期
