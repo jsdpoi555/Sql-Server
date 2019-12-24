@@ -1,0 +1,8 @@
+if exists (select * from sysobjects where name = 'A')
+ drop view [A]
+ go
+ --创建视图
+create view [A]
+as
+
+select * 
