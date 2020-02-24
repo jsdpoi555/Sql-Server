@@ -1,4 +1,6 @@
 删除指定列
 设计里可直接删除
 
-删除单表单行数据：delete from 数据库名.dbo.表名 where 条件
+删除单表单行数据：delete from 数据库名.dbo.表名 where 
+
+更新指定数据：update [审计抽样出库单明细拼接] set 金额=0,含税金额=0,未税金额=0 FROM [审计抽样出库单明细拼接] where 金额 is null
