@@ -1,1 +1,3 @@
 聚合前筛选用where，聚合后筛选用having
+sum
+count
