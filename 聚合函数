@@ -1,3 +1,6 @@
 聚合前筛选用where，聚合后筛选用having
 sum
 count
+SELECT 抽样规则,count(抽样规则)as 基数
+  FROM [审计].[dbo].[审计抽样出库单明细拼接] where 集团合并发函=0
+  group by 抽样规则
