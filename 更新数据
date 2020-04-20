@@ -2,5 +2,7 @@
 设计里可直接删除
 
 删除单表单行数据：delete from 数据库名.dbo.表名 where 
+delete from [账务明细].[dbo].[账务明细2019下] where 月 <> 10 
+
 
 更新指定数据：update [审计抽样出库单明细拼接] set 金额=0,含税金额=0,未税金额=0 FROM [审计抽样出库单明细拼接] where 金额 is null
