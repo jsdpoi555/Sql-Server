@@ -14,4 +14,4 @@ delete from [账务明细].[dbo].[账务明细2019下] where 月 <> 10
 insert into [账务明细].[dbo].[账务明细2020] select * from [账务明细].[dbo].[A]
 
 把表数据加入到一个没有数据的表中
-SELECT * into  [账务明细].[dbo].开票明细汇总 FROM [账务明细].[dbo].[A]
+SELECT * into  [开票明细].[dbo].开票明细汇总 FROM [开票明细备份].[dbo].[202005开票明细汇总]
