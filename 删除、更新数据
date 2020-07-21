@@ -18,3 +18,17 @@ insert into [开票明细].[dbo].[开票明细汇总] select replace(LEFT(开票
 
 把表数据加入到一个没有数据的表中
 SELECT * into  [开票明细].[dbo].[开票明细汇总] FROM [开票明细备份].[dbo].[202005开票明细汇总]
+
+
+drop table [退货].[dbo].[退货数据汇总]
+SELECT * into  [退货].[dbo].[退货数据汇总] FROM
+	(select * from [退货].[dbo].[退货数据2013] union all
+	select * from [退货].[dbo].[退货数据2014] union all
+	select * from [退货].[dbo].[退货数据2015] union all
+	select * from [退货].[dbo].[退货数据2016] union all
+	select * from [退货].[dbo].[退货数据2017] union all
+	select * from [退货].[dbo].[退货数据2018] union all
+	select * from [退货].[dbo].[退货数据2019] union all
+	select * from [退货].[dbo].[退货数据2020上] union all
+	select * from [退货].[dbo].[退货数据2020下]) as A
+
