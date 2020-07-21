@@ -13,3 +13,6 @@ INNER JOIN
   FROM [通用].[dbo].[录款信息]
   where 集团名称 not like '南方电网%'and 收款单状态 = '已通过') as A2
 ON A1.来款单位 = A2.来款单位
+
+select * FROM [通用].[dbo].[录款信息]
+where 集团名称 like '国家税务总局%' and 来款单位='上海晨光科力普办公用品有限公司深圳分公司'
