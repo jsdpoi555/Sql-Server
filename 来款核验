@@ -1,0 +1,4 @@
+SELECT distinct 客户编号,客户名称,来款单位,len(来款单位) as A
+  FROM [通用].[dbo].[录款信息]
+  where 集团名称='A' and 收款单状态 = '已通过' and 客户名称 not like CONCAT('%',来款单位,'%') and left(来款单位,1) <>'收' and len(来款单位)>4
+  order by len(来款单位)
