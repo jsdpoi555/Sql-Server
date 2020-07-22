@@ -1,0 +1,1 @@
+SELECT value FROM string_split(字符串,',') 
