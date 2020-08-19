@@ -1,6 +1,7 @@
 SELECT value FROM string_split(字符串,',') 
 
-SELECT value FROM string_split(字符串,',') AS A
+SELECT * FROM
+(SELECT value FROM string_split('11210161',',') )AS A
 LEFT JOIN
 [退货].[dbo].[退货数据汇总]
 ON A.VALUE = [退货].[dbo].[退货数据汇总].会员编号
