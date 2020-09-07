@@ -31,4 +31,19 @@ SELECT * into  [退货].[dbo].[退货数据汇总] FROM
 	select * from [退货].[dbo].[退货数据2019] union all
 	select * from [退货].[dbo].[退货数据2020上] union all
 	select * from [退货].[dbo].[退货数据2020下]) as A
+	
+SELECT * FROM
+(SELECT * ,round(账差异化-iif(EIP差异化 is null,0,EIP差异化),2) as 差异 FROM
+(SELECT * FROM
+(SELECT [客户编号金蝶],round(abs(sum(借方本币)),2) as 账差异化
+  FROM [账务明细].[dbo].[账务明细全]
+  where 类型 = '差异化核销'
+  group by [客户编号金蝶]) as A
+LEFT JOIN 
+(SELECT 客户编号,round(sum(金额),2) as EIP差异化
+  FROM [通用].[dbo].[录款信息]
+where 银行流水号 like '%差异化%'
+group by 客户编号) AS B
+ON A.客户编号金蝶 = B.客户编号) as C) as D
+WHERE 差异<>0
 
