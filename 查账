@@ -1,0 +1,15 @@
+在客户财务信息表中存在且有效，但不存在于月结客户发票核销表中，的会员号，可能会员号的应收账款余额=0
+
+SELECT * FROM
+(select B.* from
+(SELECT distinct[客户编号]
+  FROM [通用].[dbo].[月结客户发票核销]) as A
+  RIGHT JOIN
+(  SELECT [会员号],[会员名称],[集团]
+  FROM [通用].[dbo].[客户财务信息表]
+  where[账期类型]='月结' and [是否有效]='有效') AS B
+ON A.[客户编号]= B.[会员号]
+where A.[客户编号] is null) as C
+LEFT JOIN [账务明细].[dbo].[账务余额全]
+ON C.[会员号]=[账务明细].[dbo].[账务余额全].[客户编号金蝶]
+order by [余额]
