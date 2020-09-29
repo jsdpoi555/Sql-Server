@@ -24,3 +24,9 @@ SELECT * into [账务核查].[dbo].[核查余额]
 where [账务核查].[dbo].[剔除].客户编号 is null
 delete from [账务核查].[dbo].[核查余额] where len(客户编号金蝶)<> 8 
 delete from [账务核查].[dbo].[核查余额] where LEFT(客户编号金蝶,1)<>'2'
+
+
+判断退货是否都在
+SELECT distinct concat(datepart(yy,创建时间),right('00'+ cast(datepart(mm,创建时间) as nvarchar),2))as 期间
+  FROM [退货].[dbo].[退货数据汇总]
+ORDER BY 期间
