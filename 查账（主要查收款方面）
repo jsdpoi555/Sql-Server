@@ -1,4 +1,5 @@
 【方法二】剔除 （1）可能存在月底跨月录款的会员号，（2）所有现结的会员号，（3）分子公司的会员号，（4）S开头，（5）MG，（6）长度＜8
+需要查的会员号
 drop table [账务核查].[dbo].[核查余额]
 SELECT * into [账务核查].[dbo].[核查余额]
 	FROM [账务明细].[dbo].[账务余额全]
@@ -7,6 +8,9 @@ SELECT * into [账务核查].[dbo].[核查余额]
 where [账务核查].[dbo].[剔除].客户编号 is null
 delete from [账务核查].[dbo].[核查余额] where len(客户编号金蝶)<> 8 
 delete from [账务核查].[dbo].[核查余额] where LEFT(客户编号金蝶,1)<>'2'
+
+select * from [账务核查].[dbo].[核查余额] 
+
 
 判断退货数据哪些可用
 SELECT distinct RMA状态,退货状态,入库单状态
