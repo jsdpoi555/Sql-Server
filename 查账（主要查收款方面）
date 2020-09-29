@@ -38,7 +38,8 @@ on A.客户编号 = [账务核查].[dbo].[核查余额] .客户编号金蝶
 delete [账务核查].[dbo].[EIP录款汇总] where 客户编号 is null
 
 （5）查找差异
-SELECT * FROM
+drop table [账务核查].[dbo].[贷方差异]
+SELECT * into [账务核查].[dbo].[贷方差异] FROM
 (SELECT *,round(账务录款合计 - EIP录款,2) as 差异
   FROM [账务核查].[dbo].[账务明细汇总]
   left join [账务核查].[dbo].[EIP录款汇总]
