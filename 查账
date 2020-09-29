@@ -37,3 +37,15 @@ SELECT max(distinct concat(datepart(yy,创建时间),right('00'+ cast(datepart(m
 SELECT distinct concat(datepart(yy,创建时间),right('00'+ cast(datepart(mm,创建时间) as nvarchar),2))as 期间
   FROM [退货].[dbo].[退货数据汇总]
 ORDER BY 期间
+
+退货数据
+select A.*,B.退货金额 from
+(SELECT distinct concat(datepart(yy,入库时间),right('00'+ cast(datepart(mm,入库时间) as nvarchar),2))as 期间,入库时间,退货类型,会员编号,退货单号,需退货的出库单号 AS 出库单号 ,出库单金额,签收时间 as 出库单签收时间
+  FROM [退货].[dbo].[退货数据汇总]
+  where 入库单状态 = '已入库') as A
+  inner join
+(select 退货单号,sum(金额)*-1 as 退货金额
+  FROM [退货].[dbo].[退货数据汇总]
+  where 入库单状态 = '已入库'
+  group by 退货单号) as B
+  on A.退货单号 = B.退货单号
