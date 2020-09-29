@@ -37,6 +37,16 @@ select A.* into [账务核查].[dbo].[EIP录款汇总] from
 on A.客户编号 = [账务核查].[dbo].[核查余额] .客户编号金蝶
 delete [账务核查].[dbo].[EIP录款汇总] where 客户编号 is null
 
+（5）查找差异
+SELECT * FROM
+(SELECT *,round(账务录款合计 - EIP录款,2) as 差异
+  FROM [账务核查].[dbo].[账务明细汇总]
+  left join [账务核查].[dbo].[EIP录款汇总]
+  on [账务核查].[dbo].[账务明细汇总].客户编号金蝶 =[账务核查].[dbo].[EIP录款汇总].客户编号) as A
+  where 差异<>0
+  order by 差异
+
+
 判断退货数据哪些可用
 SELECT distinct RMA状态,退货状态,入库单状态
   FROM [退货].[dbo].[退货数据汇总]
