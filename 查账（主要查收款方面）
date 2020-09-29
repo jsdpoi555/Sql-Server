@@ -1,5 +1,5 @@
 【方法二】剔除 （1）可能存在月底跨月录款的会员号，（2）所有现结的会员号，（3）分子公司的会员号，（4）S开头，（5）MG，（6）长度＜8
-需要查的会员号
+（1）需要查的会员号
 drop table [账务核查].[dbo].[核查余额]
 SELECT * into [账务核查].[dbo].[核查余额]
 	FROM [账务明细].[dbo].[账务余额全]
@@ -9,8 +9,33 @@ where [账务核查].[dbo].[剔除].客户编号 is null
 delete from [账务核查].[dbo].[核查余额] where len(客户编号金蝶)<> 8 
 delete from [账务核查].[dbo].[核查余额] where LEFT(客户编号金蝶,1)<>'2'
 
-select * from [账务核查].[dbo].[核查余额] 
+（2）调出账务明细里差异化核销和回款明细
+drop table [账务核查].[dbo].[账务明细]
+SELECT 客户编号金蝶,sum(借方本币)*-1 as 差异化核销,sum(贷方本币) as 收款 into [账务核查].[dbo].[账务明细]
+  FROM [账务明细].[dbo].[账务明细全]
+  where 类型='收款' or  类型='差异化核销' 
+  group by 客户编号金蝶
 
+
+（3）汇总账务明细
+drop table [账务核查].[dbo].[账务明细汇总]
+select A.* into [账务核查].[dbo].[账务明细汇总] from
+(SELECT 客户编号金蝶,round(sum(差异化核销) + sum(收款),2) as 账务录款合计 
+from [账务核查].[dbo].[账务明细]
+group by 客户编号金蝶) as A
+RIGHT join [账务核查].[dbo].[核查余额] 
+on A.客户编号金蝶 = [账务核查].[dbo].[核查余额] .客户编号金蝶
+delete [账务核查].[dbo].[账务明细汇总] where 客户编号金蝶 is null
+
+（4）汇总EIP合计
+drop table [账务核查].[dbo].[EIP录款汇总]
+select A.* into [账务核查].[dbo].[EIP录款汇总] from
+(SELECT 客户编号, round(sum(金额),2) as EIP录款
+  FROM [通用].[dbo].[录款信息]
+  group by 客户编号) as A
+ RIGHT join [账务核查].[dbo].[核查余额] 
+on A.客户编号 = [账务核查].[dbo].[核查余额] .客户编号金蝶
+delete [账务核查].[dbo].[EIP录款汇总] where 客户编号 is null
 
 判断退货数据哪些可用
 SELECT distinct RMA状态,退货状态,入库单状态
