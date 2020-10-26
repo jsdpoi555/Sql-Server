@@ -1,6 +1,9 @@
 SELECT *
   FROM [退货].[dbo].[退货数据汇总]
   where 公司名称 like '中国移动（平台对接）%' and 退货状态='已入库' and 入库单状态='已入库'
+  
+drop table [通用].[dbo].[退货数据]
+SELECT * into  [通用].[dbo].[退货数据] FROM [退货].[dbo].[退货数据汇总]
 
 
 删除表
