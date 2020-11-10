@@ -1,0 +1,6 @@
+drop table [通用].[dbo].[集团汇总]
+SELECT 集团全称,期间,round(sum(调整后借方本币),2) as 应收借方 ,round(sum(调整后贷方本币),2) as 应收贷方 into  [通用].[dbo].[集团汇总]  FROM 
+	(SELECT [通用].[dbo].[客户财务信息表].集团全称,[账务明细].[dbo].[账务明细全].* FROM 
+	[账务明细].[dbo].[账务明细全] left join [通用].[dbo].[客户财务信息表]
+	on [账务明细].[dbo].[账务明细全].客户编号金蝶 = [通用].[dbo].[客户财务信息表].会员号) as A
+group by 集团全称,期间
