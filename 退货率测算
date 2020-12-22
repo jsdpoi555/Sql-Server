@@ -1,0 +1,56 @@
+drop table [2020初审].[dbo].[全]
+SELECT 会员编号 as 立账会员编号,会员编号,公司名称,订单号,源订单号,外部订单号,订单金额,原出库单号 as 出库单号,round(原出库单金额,2) as 出库单金额,原出库单签收时间 as 出库单签收时间,原出库单发货方式 as 出库单发货方式,出库单支付方式,入库仓库 as 仓库
+		,退货单号 as 单号,-round(退货单金额,2) as 金额,入库时间 as 立账时间,退货状态 as 单据状态,退货原因,退货类型
+into  [2020初审].[dbo].[全] FROM [2020初审].[dbo].[退货单]
+insert into [2020初审].[dbo].[全] 
+select  会员编号 as 立账会员编号,会员编号,公司名称,订单号,源订单号,外部订单号,订单金额,原出库单号 as 出库单号,round(原出库单金额,2) as 出库单金额,原出库单签收时间 as 出库单签收时间,原出库单发货方式 as 出库单发货方式,出库单支付方式,发货仓库 as 仓库
+		,出库单号 as 单号,round(出库单金额,2) as 金额,签收时间 as 立账时间,出库状态 as 单据状态,'' as 退货原因,'' as 退货类型
+from [2020初审].[dbo].[出库单]
+update [2020初审].[dbo].[全] set 源订单号='' FROM [2020初审].[dbo].[全] where 源订单号 is null
+update [2020初审].[dbo].[全] set 外部订单号='' FROM [2020初审].[dbo].[全] where 外部订单号 is null
+update [2020初审].[dbo].[全] set 出库单签收时间=立账时间 FROM [2020初审].[dbo].[全] where 出库单签收时间 is null
+
+update [2020初审].[dbo].[全] set 立账会员编号='MG101' FROM [2020初审].[dbo].[全] where 立账会员编号='11187496'
+update [2020初审].[dbo].[全] set 立账会员编号='MG101' FROM [2020初审].[dbo].[全] where 立账会员编号='20266301'
+update [2020初审].[dbo].[全] set 立账会员编号='MG101' FROM [2020初审].[dbo].[全] where 立账会员编号='11205260'
+update [2020初审].[dbo].[全] set 立账会员编号='MG10801' FROM [2020初审].[dbo].[全] where 立账会员编号='11205438'
+update [2020初审].[dbo].[全] set 立账会员编号='MG10701' FROM [2020初审].[dbo].[全] where 立账会员编号='11195575'
+update [2020初审].[dbo].[全] set 立账会员编号='MG10701' FROM [2020初审].[dbo].[全] where 立账会员编号='20303729'
+update [2020初审].[dbo].[全] set 立账会员编号='MG10706' FROM [2020初审].[dbo].[全] where 立账会员编号='11213892'
+update [2020初审].[dbo].[全] set 立账会员编号='MG10706' FROM [2020初审].[dbo].[全] where 立账会员编号='20303737'
+update [2020初审].[dbo].[全] set 立账会员编号='MG11001' FROM [2020初审].[dbo].[全] where 立账会员编号='20269383'
+update [2020初审].[dbo].[全] set 立账会员编号='SXG-00' FROM [2020初审].[dbo].[全] where LEFT(立账会员编号,1)='S'
+update [2020初审].[dbo].[全] set 立账会员编号='11194521' FROM [2020初审].[dbo].[全] where 立账会员编号='11187690'
+update [2020初审].[dbo].[全] set 立账会员编号='11194521' FROM [2020初审].[dbo].[全] where 立账会员编号='11188010'
+update [2020初审].[dbo].[全] set 立账会员编号='11194521' FROM [2020初审].[dbo].[全] where 立账会员编号='11194521'
+update [2020初审].[dbo].[全] set 立账会员编号='11194521' FROM [2020初审].[dbo].[全] where 立账会员编号='11194965'
+update [2020初审].[dbo].[全] set 立账会员编号='11194521' FROM [2020初审].[dbo].[全] where 立账会员编号='11197084'
+update [2020初审].[dbo].[全] set 立账会员编号='11194521' FROM [2020初审].[dbo].[全] where 立账会员编号='11197085'
+update [2020初审].[dbo].[全] set 立账会员编号='11194521' FROM [2020初审].[dbo].[全] where 立账会员编号='11197086'
+update [2020初审].[dbo].[全] set 立账会员编号='11194521' FROM [2020初审].[dbo].[全] where 立账会员编号='11204397'
+update [2020初审].[dbo].[全] set 立账会员编号='11194521' FROM [2020初审].[dbo].[全] where 立账会员编号='11204398'
+update [2020初审].[dbo].[全] set 立账会员编号='11194521' FROM [2020初审].[dbo].[全] where 立账会员编号='11206353'
+update [2020初审].[dbo].[全] set 立账会员编号='11194521' FROM [2020初审].[dbo].[全] where 立账会员编号='11206638'
+
+
+
+delete from [2020初审].[dbo].[全] where 单据状态 = '待出库' 
+delete from [2020初审].[dbo].[全] where 单据状态 = '初始' 
+delete from [2020初审].[dbo].[全] where 单据状态 = '已审核' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '11194784' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '11213756' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '11216132' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '11224535' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '11225028' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '20004641' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '20005038' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '20227293' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '20260018' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '20259934' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '20259930' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '20278386' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '20322042' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '21010833' 
+delete from [2020初审].[dbo].[全] where 会员编号 = '20278292' 
+drop table [2020初审].[dbo].[全备份]
+SELECT * into  [2020初审].[dbo].[全备份] FROM [2020初审].[dbo].[全]
