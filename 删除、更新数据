@@ -89,3 +89,6 @@ update [2020初审].[dbo].[全] set 外部订单号='' FROM [2020初审].[dbo].[
 delete from [2020初审].[dbo].[全] where 单据状态 = '待出库' 
 delete from [2020初审].[dbo].[全] where 单据状态 = '初始' 
 delete from [2020初审].[dbo].[全] where 单据状态 = '已审核' 
+
+drop table [2020初审].[dbo].[全备份]
+SELECT * into  [2020初审].[dbo].[全备份] FROM [2020初审].[dbo].[全]
