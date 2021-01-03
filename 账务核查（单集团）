@@ -1,14 +1,38 @@
-SELECT * FROM
-(SELECT *
-  FROM [通用].[dbo].[客户财务信息表]
-  where 客户类型='合作客户' and 集团='国电投') as A
-left join [通用].[dbo].[录款信息]
-on A.[会员号] = [通用].[dbo].[录款信息].[客户编号]
-
-
-SELECT * FROM
-(SELECT *
-  FROM [通用].[dbo].[客户财务信息表]
-  where 客户类型='合作客户' and 集团='国电投') as A
-left join [账务明细].[dbo].[账务明细全]
-on A.[会员号] = [账务明细].[dbo].[账务明细全].[客户编号金蝶]
+SELECT * FROM 
+	(
+	select AA.*,AB.录款合计,ROUND(金蝶合计-录款合计,2) as 差异 FROM
+		(
+		select *,round(差异化合计 + 收款合计,2) as 金蝶合计 from
+			(
+			SELECT 会员号,会员名称
+			  FROM [通用].[dbo].[客户财务信息表]
+			  where 集团全称 in ('中国南方电网有限责任公司')
+			) as A
+			LEFT JOIN
+			(
+			SELECT 客户编号金蝶,round(sum(调整后借方本币)*-1,2) as 差异化合计,round(sum(调整后贷方本币),2) as 收款合计
+			  FROM [账务明细].[dbo].[账务明细全]
+			  where 类型 = '收款' OR 类型 = '差异化核销' 
+			group by 客户编号金蝶
+			) as B
+			ON A.会员号 = B.客户编号金蝶
+		) as AA
+		LEFT JOIN
+		(
+		select * from
+			(
+			SELECT 会员号,会员名称
+			  FROM [通用].[dbo].[客户财务信息表]
+			  where 集团全称 in ('中国南方电网有限责任公司')
+			) as C
+			LEFT JOIN
+			(
+			SELECT 客户编号,round(sum(金额),2) as 录款合计
+			  FROM [通用].[dbo].[录款信息]
+			group by 客户编号
+			) as D
+			ON C.会员号 = D.客户编号
+		) as AB
+		ON AA.会员号= AB.客户编号
+	) as AAA
+WHERE 差异<>0
