@@ -1,0 +1,17 @@
+/****** SSMS 的 SelectTopNRows 命令的脚本  ******/
+--truncate table [账务余额全]
+--insert into [账务余额全]
+drop table [账务余额全]
+SELECT B.*,
+		IIF(余额=0,'平',iif(余额>0,'借','贷')) AS 方向,
+		ABS(余额) AS 余额本币
+into  账务余额全
+FROM
+	(SELECT 客户编号金蝶,科目编号金蝶,ROUND(借方金额-贷方金额,2) as 余额
+	FROM
+		(SELECT 客户编号金蝶,科目编号金蝶,sum(借方本币) as 借方金额,sum(贷方本币) as 贷方金额
+		FROM [账务明细].[dbo].[账务明细全]
+		GROUP BY 客户编号金蝶,科目编号金蝶) AS A
+	) AS B
+--WHERE 客户编号金蝶 = 'qt162'
+order by 客户编号金蝶,科目编号金蝶
