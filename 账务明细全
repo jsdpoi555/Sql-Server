@@ -1,0 +1,63 @@
+  /****** SSMS 的 SelectTopNRows 命令的脚本  ******/
+--truncate table [账务明细全]
+--insert into [账务明细全]
+drop table [账务明细全]
+SELECT *,
+		IIF(类型 = '收款' and 贷方本币 = 0,0,借方本币) as 调整后借方本币,
+		IIF(类型 = '收款' and 贷方本币 = 0,-1*借方本币,贷方本币) as 调整后贷方本币
+into  账务明细全
+FROM
+	(SELECT *,
+			IIF(凭证类型 <> '转','收款',
+				IIF(贷方本币 = 0,
+					IIF(摘要 like '%销售%','销售',
+						IIF(摘要 like '%差异%','差异化核销',
+							IIF(摘要 like '%平台%费%中国电能成套%','国电投平销返利',
+								IIF(摘要 like '%审计%','审计调整',
+									IIF(摘要 like '%款%' ,'收款',
+										iif(摘要 like '%年初数%' ,'金蝶期初','销售')
+									)
+								)
+							)
+						)
+					)
+					,IIF(摘要 like '%平台%费%中国电能成套%','国电投平销返利','收款')
+				)
+			) as 类型
+	FROM
+			(SELECT concat(年,月) as 期间,年,月,日,科目编号金蝶,科目名称,
+					iif(金蝶客户编号 is null,客户编号,金蝶客户编号)as 客户编号金蝶,
+					客户名称,凭证号,摘要,借方本币,贷方本币,方向17,余额本币,
+					iif(凭证号 like '%现%','现',iif(凭证号 like '%银%','银','转'))as 凭证类型
+			FROM
+				(SELECT B.*,转换内部客户编码.金蝶客户编号 FROM 
+					(SELECT A.*,转换科目.科目编号金蝶 FROM
+						(SELECT * FROM [账务明细].[dbo].[账务明细2013] union all
+						SELECT * FROM [账务明细].[dbo].[账务明细2014] union all
+						SELECT * FROM [账务明细].[dbo].[账务明细2015] union all
+						SELECT * FROM [账务明细].[dbo].[账务明细2016] union all
+						SELECT * FROM [账务明细].[dbo].[账务明细2017] union all
+						SELECT * FROM [账务明细].[dbo].[账务明细2018] union all
+						SELECT * FROM [账务明细].[dbo].[账务明细2019上]--用友
+						) as A left join [账务明细].[dbo].[转换科目] ON A.科目编号 = 转换科目.科目编号
+					) AS B left join [账务明细].[dbo].[转换内部客户编码] ON B.客户编号 = 转换内部客户编码.客户编号
+				UNION ALL --金蝶
+
+				SELECT AA.*,AA.科目编号 AS 科目编号金蝶,转换内部客户编码.金蝶客户编号 FROM 
+					(SELECT * FROM [账务明细].[dbo].[账务明细2019下] union all
+					SELECT * FROM [账务明细].[dbo].[账务明细2020] union all
+					SELECT * FROM [账务明细].[dbo].[账务明细2021]
+					) AS AA LEFT JOIN [账务明细].[dbo].[转换内部客户编码] ON AA.客户编号 = 转换内部客户编码.客户编号
+
+
+
+
+				--select [账务明细2019下].*,[账务明细2019下].科目编号 AS 科目编号金蝶,转换内部客户编码.金蝶客户编号 from[账务明细].[dbo].[账务明细2019下]
+					--left join [账务明细].[dbo].[转换内部客户编码] ON [账务明细2019下].客户编号 = 转换内部客户编码.客户编号
+				) AS C
+			) AS D 
+	) AS E
+--WHERE 类型='收款'and 贷方本币 = 0
+--WHERE 客户编号金蝶='11100000' and (借方本币 = 2000 or 借方本币=-2000)
+--WHERE 凭证类型 = '转' and 摘要 like '款' and 贷方本币 = 0
+--order by 年,月,日,凭证号
