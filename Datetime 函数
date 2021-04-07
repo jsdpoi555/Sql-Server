@@ -1,1 +1,3 @@
 datepart(yy,datetime) --提取yy-年份；mm-月份；dd-日期
+convert(varchar(10),getdate(), 120)   datetime类型转换为date
+CONVERT(varchar(12) , getdate(), 108 )  datetime类型转换为time
