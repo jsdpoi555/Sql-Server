@@ -1,0 +1,14 @@
+
+SELECT 
+(case when 限制区域 like '%'+市+'%' Then 1 
+else 0
+end 
+)as 系数,
+A.*,B.限制区域 
+from
+	(select * 
+	from 全量参数
+	where 合同编码='F-2020-50-1' and 市='黑河市') as A
+left join 
+	(select 合同编码,限制区域 from 合同基础信息 where 合同编码='F-2020-50-1') AS B
+on A.合同编码 = B.合同编码
