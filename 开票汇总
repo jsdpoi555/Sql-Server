@@ -1,11 +1,16 @@
-drop table [开票汇总]
+insert into [开票明细汇总].[dbo].[开票明细汇总] select replace(LEFT(开票日期, 7), '-', '') AS 期间, * from [开票明细备份2].[dbo].[202105开票明细汇总]
+
+update [开票明细汇总].[dbo].[开票明细汇总] set 购方税号='Null' FROM [开票明细汇总].[dbo].[开票明细汇总] where 购方税号 is null
+
+drop table [开票明细].[开票汇总]
 SELECT  B.期间, B.开票日期, B.开票机号, A.发票号码, B.购方企业名称, B.购方税号,A.未税金额, A.税额金额,  A.含税金额
-into  开票汇总
+into  [开票明细].[开票汇总]
 FROM      
 	(SELECT   发票号码,购方企业名称, ROUND(SUM(金额), 2) AS 未税金额, ROUND(SUM(税额), 2) AS 税额金额, ROUND(SUM(金额) + SUM(税额), 2) AS 含税金额
-     FROM      dbo.开票明细汇总 GROUP BY 发票号码,购方企业名称) AS A 
+     FROM      [开票明细汇总].[dbo].[开票明细汇总] GROUP BY 发票号码,购方企业名称) AS A 
 	 LEFT OUTER JOIN
     (SELECT DISTINCT 发票号码, 购方企业名称, 购方税号,开票机号, 期间, 开票日期
      FROM      dbo.开票明细汇总 AS 开票明细汇总_1) AS B 
 	ON A.发票号码 = B.发票号码 and A.购方企业名称 = B.购方企业名称
 ORDER BY B.开票日期
+
