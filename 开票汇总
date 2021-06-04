@@ -10,7 +10,6 @@ FROM
      FROM      [开票明细汇总].[dbo].[开票明细汇总] GROUP BY 发票号码,购方企业名称) AS A 
 	 LEFT OUTER JOIN
     (SELECT DISTINCT 发票号码, 购方企业名称, 购方税号,开票机号, 期间, 开票日期
-     FROM      dbo.开票明细汇总 AS 开票明细汇总_1) AS B 
+     FROM      [开票明细汇总].[dbo].[开票明细汇总] AS 开票明细汇总_1) AS B 
 	ON A.发票号码 = B.发票号码 and A.购方企业名称 = B.购方企业名称
 ORDER BY B.开票日期
-
